@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "mkdir -p out/ && gulp",
+    "build:contract": "mkdir -p out/ && gulp",
+    "build:bundle": "browserify index.js > bundle.js",
+    "build": "npm run build:contract && npm run build:bundle",
     "deploy:contract": "near deploy --account_id=near-fortmatic-demo --node_url=https://studio.nearprotocol.com/devnet",
     "deploy:pages": "gh-pages -d src",
     "deploy": "npm run build && npm run deploy:contract && npm run deploy:pages",
@@ -16,12 +18,13 @@
   "devDependencies": {
     "assemblyscript": "github:nearprotocol/assemblyscript.git",
     "assemblyscript-json": "github:nearprotocol/assemblyscript-json",
+    "browserify": "^16.2.3",
     "gh-pages": "^2.0.1",
     "gulp": "^3",
     "jest": "^22.4.4",
     "jest-environment-node": "^24.5.0",
     "near-runtime-ts": "github:nearprotocol/near-runtime-ts",
-    "near-shell": "github:nearprotocol/near-shell"
+    "near-shell": "../near-shell"
   },
   "author": "",
   "license": "MIT",
