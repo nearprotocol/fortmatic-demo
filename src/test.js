@@ -19,22 +19,32 @@ describe("Greeter", function() {
       contract = await near.loadContract(contractName, {
         // NOTE: This configuration only needed while NEAR is still in development
         // View methods are read only. They don't modify the state, but usually return some value.
-        viewMethods: ["hello"],
+        viewMethods: ["getNearAddress"],
         // Change methods can modify the state. But you don't receive the returned value when called.
-        changeMethods: [],
+        changeMethods: ["connectEthereumAddress", "disconnectEthereumAddress"],
         sender: accountId
       });
     });
 
-    // Multiple tests can be described below. Search Jasmine JS for documentation.
-    describe("simple", function() {
+    describe("eth-connector", function() {
+      const ETH_ADDRESS = "whatever actually";
+
       beforeAll(async function() {
         // There can be some common setup for each test.
       });
 
-      it("get hello message", async function() {
-        const result = await contract.hello();
-        expect(result).toBe("Hello, world");
+      it("can record NEAR to ETH address mapping", async function() {
+        await contract.connectEthereumAddress({ethAddress: ETH_ADDRESS});
+        let nearAddress = await contract.getNearAddress({ethAddress: ETH_ADDRESS});
+        expect(nearAddress).toBe(accountId);
+      });
+
+      it("can remove NEAR to ETH address mapping", async function() {
+        const ETH_ADDRESS = "whatever actually";
+        await contract.connectEthereumAddress({ethAddress: ETH_ADDRESS});
+        await contract.disconnectEthereumAddress();
+        let nearAddress = await contract.getNearAddress({ethAddress: ETH_ADDRESS});
+        expect(nearAddress).toBe(null);
       });
   });
 });
